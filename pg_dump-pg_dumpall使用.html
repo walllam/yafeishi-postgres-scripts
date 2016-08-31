@@ -1,0 +1,1773 @@
+<!DOCTYPE html><html>
+
+<head>
+<meta charset="utf-8">
+<title># pg_dump/pg_dumpall使用</title>
+<style>
+@font-face {
+  font-family: octicons-anchor;
+  src: url(data:font/woff;charset=utf-8;base64,d09GRgABAAAAAAYcAA0AAAAACjQAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABGRlRNAAABMAAAABwAAAAca8vGTk9TLzIAAAFMAAAARAAAAFZG1VHVY21hcAAAAZAAAAA+AAABQgAP9AdjdnQgAAAB0AAAAAQAAAAEACICiGdhc3AAAAHUAAAACAAAAAj//wADZ2x5ZgAAAdwAAADRAAABEKyikaNoZWFkAAACsAAAAC0AAAA2AtXoA2hoZWEAAALgAAAAHAAAACQHngNFaG10eAAAAvwAAAAQAAAAEAwAACJsb2NhAAADDAAAAAoAAAAKALIAVG1heHAAAAMYAAAAHwAAACABEAB2bmFtZQAAAzgAAALBAAAFu3I9x/Nwb3N0AAAF/AAAAB0AAAAvaoFvbwAAAAEAAAAAzBdyYwAAAADP2IQvAAAAAM/bz7t4nGNgZGFgnMDAysDB1Ml0hoGBoR9CM75mMGLkYGBgYmBlZsAKAtJcUxgcPsR8iGF2+O/AEMPsznAYKMwIkgMA5REMOXicY2BgYGaAYBkGRgYQsAHyGMF8FgYFIM0ChED+h5j//yEk/3KoSgZGNgYYk4GRCUgwMaACRoZhDwCs7QgGAAAAIgKIAAAAAf//AAJ4nHWMMQrCQBBF/0zWrCCIKUQsTDCL2EXMohYGSSmorScInsRGL2DOYJe0Ntp7BK+gJ1BxF1stZvjz/v8DRghQzEc4kIgKwiAppcA9LtzKLSkdNhKFY3HF4lK69ExKslx7Xa+vPRVS43G98vG1DnkDMIBUgFN0MDXflU8tbaZOUkXUH0+U27RoRpOIyCKjbMCVejwypzJJG4jIwb43rfl6wbwanocrJm9XFYfskuVC5K/TPyczNU7b84CXcbxks1Un6H6tLH9vf2LRnn8Ax7A5WQAAAHicY2BkYGAA4teL1+yI57f5ysDNwgAC529f0kOmWRiYVgEpDgYmEA8AUzEKsQAAAHicY2BkYGB2+O/AEMPCAAJAkpEBFbAAADgKAe0EAAAiAAAAAAQAAAAEAAAAAAAAKgAqACoAiAAAeJxjYGRgYGBhsGFgYgABEMkFhAwM/xn0QAIAD6YBhwB4nI1Ty07cMBS9QwKlQapQW3VXySvEqDCZGbGaHULiIQ1FKgjWMxknMfLEke2A+IJu+wntrt/QbVf9gG75jK577Lg8K1qQPCfnnnt8fX1NRC/pmjrk/zprC+8D7tBy9DHgBXoWfQ44Av8t4Bj4Z8CLtBL9CniJluPXASf0Lm4CXqFX8Q84dOLnMB17N4c7tBo1AS/Qi+hTwBH4rwHHwN8DXqQ30XXAS7QaLwSc0Gn8NuAVWou/gFmnjLrEaEh9GmDdDGgL3B4JsrRPDU2hTOiMSuJUIdKQQayiAth69r6akSSFqIJuA19TrzCIaY8sIoxyrNIrL//pw7A2iMygkX5vDj+G+kuoLdX4GlGK/8Lnlz6/h9MpmoO9rafrz7ILXEHHaAx95s9lsI7AHNMBWEZHULnfAXwG9/ZqdzLI08iuwRloXE8kfhXYAvE23+23DU3t626rbs8/8adv+9DWknsHp3E17oCf+Z48rvEQNZ78paYM38qfk3v/u3l3u3GXN2Dmvmvpf1Srwk3pB/VSsp512bA/GG5i2WJ7wu430yQ5K3nFGiOqgtmSB5pJVSizwaacmUZzZhXLlZTq8qGGFY2YcSkqbth6aW1tRmlaCFs2016m5qn36SbJrqosG4uMV4aP2PHBmB3tjtmgN2izkGQyLWprekbIntJFing32a5rKWCN/SdSoga45EJykyQ7asZvHQ8PTm6cslIpwyeyjbVltNikc2HTR7YKh9LBl9DADC0U/jLcBZDKrMhUBfQBvXRzLtFtjU9eNHKin0x5InTqb8lNpfKv1s1xHzTXRqgKzek/mb7nB8RZTCDhGEX3kK/8Q75AmUM/eLkfA+0Hi908Kx4eNsMgudg5GLdRD7a84npi+YxNr5i5KIbW5izXas7cHXIMAau1OueZhfj+cOcP3P8MNIWLyYOBuxL6DRylJ4cAAAB4nGNgYoAALjDJyIAOWMCiTIxMLDmZedkABtIBygAAAA==) format('woff');
+}
+
+body {
+  background-color: white;
+}
+
+.markdown-body {
+  min-width: 200px;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 30px;
+
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  color: #333;
+  overflow: hidden;
+  font-family: "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  word-wrap: break-word;
+}
+
+.markdown-body a {
+  background: transparent;
+}
+
+.markdown-body a:active,
+.markdown-body a:hover {
+  outline: 0;
+}
+
+.markdown-body strong {
+  font-weight: bold;
+}
+
+.markdown-body h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+
+.markdown-body img {
+  border: 0;
+}
+
+.markdown-body hr {
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  height: 0;
+}
+
+.markdown-body pre {
+  overflow: auto;
+}
+
+.markdown-body code,
+.markdown-body kbd,
+.markdown-body pre {
+  font-family: monospace, monospace;
+  font-size: 1em;
+}
+
+.markdown-body input {
+  color: inherit;
+  font: inherit;
+  margin: 0;
+}
+
+.markdown-body html input[disabled] {
+  cursor: default;
+}
+
+.markdown-body input {
+  line-height: normal;
+}
+
+.markdown-body input[type="checkbox"] {
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 0;
+}
+
+.markdown-body table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.markdown-body td,
+.markdown-body th {
+  padding: 0;
+}
+
+.markdown-body * {
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.markdown-body input {
+  font: 13px/1.4 Helvetica, arial, freesans, clean, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+.markdown-body a {
+  color: #4183c4;
+  text-decoration: none;
+}
+
+.markdown-body a:hover,
+.markdown-body a:focus,
+.markdown-body a:active {
+  text-decoration: underline;
+}
+
+.markdown-body hr {
+  height: 0;
+  margin: 15px 0;
+  overflow: hidden;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.markdown-body hr:before {
+  display: table;
+  content: "";
+}
+
+.markdown-body hr:after {
+  display: table;
+  clear: both;
+  content: "";
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  line-height: 1.1;
+}
+
+.markdown-body h1 {
+  font-size: 30px;
+}
+
+.markdown-body h2 {
+  font-size: 21px;
+}
+
+.markdown-body h3 {
+  font-size: 16px;
+}
+
+.markdown-body h4 {
+  font-size: 14px;
+}
+
+.markdown-body h5 {
+  font-size: 12px;
+}
+
+.markdown-body h6 {
+  font-size: 11px;
+}
+
+.markdown-body blockquote {
+  margin: 0;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  padding: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown-body ol ol,
+.markdown-body ul ol {
+  list-style-type: lower-roman;
+}
+
+.markdown-body ul ul ol,
+.markdown-body ul ol ol,
+.markdown-body ol ul ol,
+.markdown-body ol ol ol {
+  list-style-type: lower-alpha;
+}
+
+.markdown-body dd {
+  margin-left: 0;
+}
+
+.markdown-body code {
+  font: 12px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+}
+
+.markdown-body pre {
+  margin-top: 0;
+  margin-bottom: 0;
+  font: 12px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+}
+
+.markdown-body kbd {
+  background-color: #e7e7e7;
+  background-image: -webkit-linear-gradient(#fefefe, #e7e7e7);
+  background-image: linear-gradient(#fefefe, #e7e7e7);
+  background-repeat: repeat-x;
+  border-radius: 2px;
+  border: 1px solid #cfcfcf;
+  color: #000;
+  padding: 3px 5px;
+  line-height: 10px;
+  font: 11px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  display: inline-block;
+}
+
+.markdown-body>*:first-child {
+  margin-top: 0 !important;
+}
+
+.markdown-body>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+.markdown-body .anchor {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  display: block;
+  padding-right: 6px;
+  padding-left: 30px;
+  margin-left: -30px;
+}
+
+.markdown-body .anchor:focus {
+  outline: none;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+  position: relative;
+  margin-top: 1em;
+  margin-bottom: 16px;
+  font-weight: bold;
+  line-height: 1.4;
+}
+
+.markdown-body h1 .octicon-link,
+.markdown-body h2 .octicon-link,
+.markdown-body h3 .octicon-link,
+.markdown-body h4 .octicon-link,
+.markdown-body h5 .octicon-link,
+.markdown-body h6 .octicon-link {
+  display: none;
+  color: #000;
+  vertical-align: middle;
+}
+
+.markdown-body h1:hover .anchor,
+.markdown-body h2:hover .anchor,
+.markdown-body h3:hover .anchor,
+.markdown-body h4:hover .anchor,
+.markdown-body h5:hover .anchor,
+.markdown-body h6:hover .anchor {
+  height: 1em;
+  padding-left: 8px;
+  margin-left: -30px;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.markdown-body h1:hover .anchor .octicon-link,
+.markdown-body h2:hover .anchor .octicon-link,
+.markdown-body h3:hover .anchor .octicon-link,
+.markdown-body h4:hover .anchor .octicon-link,
+.markdown-body h5:hover .anchor .octicon-link,
+.markdown-body h6:hover .anchor .octicon-link {
+  display: inline-block;
+}
+
+.markdown-body h1 {
+  padding-bottom: 0.3em;
+  font-size: 2.25em;
+  line-height: 1.2;
+  border-bottom: 1px solid #eee;
+}
+
+.markdown-body h2 {
+  padding-bottom: 0.3em;
+  font-size: 1.75em;
+  line-height: 1.225;
+  border-bottom: 1px solid #eee;
+}
+
+.markdown-body h3 {
+  font-size: 1.5em;
+  line-height: 1.43;
+}
+
+.markdown-body h4 {
+  font-size: 1.25em;
+}
+
+.markdown-body h5 {
+  font-size: 1em;
+}
+
+.markdown-body h6 {
+  font-size: 1em;
+  color: #777;
+}
+
+.markdown-body p,
+.markdown-body blockquote,
+.markdown-body ul,
+.markdown-body ol,
+.markdown-body dl,
+.markdown-body table,
+.markdown-body pre {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.markdown-body hr {
+  height: 4px;
+  padding: 0;
+  margin: 16px 0;
+  background-color: #e7e7e7;
+  border: 0 none;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  padding-left: 2em;
+}
+
+.markdown-body ul ul,
+.markdown-body ul ol,
+.markdown-body ol ol,
+.markdown-body ol ul {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown-body li>p {
+  margin-top: 16px;
+}
+
+.markdown-body dl {
+  padding: 0;
+}
+
+.markdown-body dl dt {
+  padding: 0;
+  margin-top: 16px;
+  font-size: 1em;
+  font-style: italic;
+  font-weight: bold;
+}
+
+.markdown-body dl dd {
+  padding: 0 16px;
+  margin-bottom: 16px;
+}
+
+.markdown-body blockquote {
+  padding: 0 15px;
+  color: #777;
+  border-left: 4px solid #ddd;
+}
+
+.markdown-body blockquote>:first-child {
+  margin-top: 0;
+}
+
+.markdown-body blockquote>:last-child {
+  margin-bottom: 0;
+}
+
+.markdown-body table {
+  display: block;
+  width: 100%;
+  overflow: auto;
+  word-break: normal;
+  word-break: keep-all;
+}
+
+.markdown-body table th {
+  font-weight: bold;
+}
+
+.markdown-body table th,
+.markdown-body table td {
+  padding: 6px 13px;
+  border: 1px solid #ddd;
+}
+
+.markdown-body table tr {
+  background-color: #fff;
+  border-top: 1px solid #ccc;
+}
+
+.markdown-body table tr:nth-child(2n) {
+  background-color: #f8f8f8;
+}
+
+.markdown-body img {
+  max-width: 100%;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.markdown-body code {
+  padding: 0;
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
+  margin: 0;
+  font-size: 85%;
+  background-color: rgba(0,0,0,0.04);
+  border-radius: 3px;
+}
+
+.markdown-body code:before,
+.markdown-body code:after {
+  letter-spacing: -0.2em;
+  content: "\00a0";
+}
+
+.markdown-body pre>code {
+  padding: 0;
+  margin: 0;
+  font-size: 100%;
+  word-break: normal;
+  white-space: pre;
+  background: transparent;
+  border: 0;
+}
+
+.markdown-body .highlight {
+  margin-bottom: 16px;
+}
+
+.markdown-body .highlight pre,
+.markdown-body pre {
+  padding: 16px;
+  overflow: auto;
+  font-size: 85%;
+  line-height: 1.45;
+  background-color: #f7f7f7;
+  border-radius: 3px;
+}
+
+.markdown-body .highlight pre {
+  margin-bottom: 0;
+  word-break: normal;
+}
+
+.markdown-body pre {
+  word-wrap: normal;
+}
+
+.markdown-body pre code {
+  display: inline;
+  max-width: initial;
+  padding: 0;
+  margin: 0;
+  overflow: initial;
+  line-height: inherit;
+  word-wrap: normal;
+  background-color: transparent;
+  border: 0;
+}
+
+.markdown-body pre code:before,
+.markdown-body pre code:after {
+  content: normal;
+}
+
+.markdown-body .highlight {
+  background: #fff;
+}
+
+.markdown-body .highlight .mf,
+.markdown-body .highlight .mh,
+.markdown-body .highlight .mi,
+.markdown-body .highlight .mo,
+.markdown-body .highlight .il,
+.markdown-body .highlight .m {
+  color: #945277;
+}
+
+.markdown-body .highlight .s,
+.markdown-body .highlight .sb,
+.markdown-body .highlight .sc,
+.markdown-body .highlight .sd,
+.markdown-body .highlight .s2,
+.markdown-body .highlight .se,
+.markdown-body .highlight .sh,
+.markdown-body .highlight .si,
+.markdown-body .highlight .sx,
+.markdown-body .highlight .s1 {
+  color: #df5000;
+}
+
+.markdown-body .highlight .kc,
+.markdown-body .highlight .kd,
+.markdown-body .highlight .kn,
+.markdown-body .highlight .kp,
+.markdown-body .highlight .kr,
+.markdown-body .highlight .kt,
+.markdown-body .highlight .k,
+.markdown-body .highlight .o {
+  font-weight: bold;
+}
+
+.markdown-body .highlight .kt {
+  color: #458;
+}
+
+.markdown-body .highlight .c,
+.markdown-body .highlight .cm,
+.markdown-body .highlight .c1 {
+  color: #998;
+  font-style: italic;
+}
+
+.markdown-body .highlight .cp,
+.markdown-body .highlight .cs {
+  color: #999;
+  font-weight: bold;
+}
+
+.markdown-body .highlight .cs {
+  font-style: italic;
+}
+
+.markdown-body .highlight .n {
+  color: #333;
+}
+
+.markdown-body .highlight .na,
+.markdown-body .highlight .nv,
+.markdown-body .highlight .vc,
+.markdown-body .highlight .vg,
+.markdown-body .highlight .vi {
+  color: #008080;
+}
+
+.markdown-body .highlight .nb {
+  color: #0086B3;
+}
+
+.markdown-body .highlight .nc {
+  color: #458;
+  font-weight: bold;
+}
+
+.markdown-body .highlight .no {
+  color: #094e99;
+}
+
+.markdown-body .highlight .ni {
+  color: #800080;
+}
+
+.markdown-body .highlight .ne {
+  color: #990000;
+  font-weight: bold;
+}
+
+.markdown-body .highlight .nf {
+  color: #945277;
+  font-weight: bold;
+}
+
+.markdown-body .highlight .nn {
+  color: #555;
+}
+
+.markdown-body .highlight .nt {
+  color: #000080;
+}
+
+.markdown-body .highlight .err {
+  color: #a61717;
+  background-color: #e3d2d2;
+}
+
+.markdown-body .highlight .gd {
+  color: #000;
+  background-color: #fdd;
+}
+
+.markdown-body .highlight .gd .x {
+  color: #000;
+  background-color: #faa;
+}
+
+.markdown-body .highlight .ge {
+  font-style: italic;
+}
+
+.markdown-body .highlight .gr {
+  color: #aa0000;
+}
+
+.markdown-body .highlight .gh {
+  color: #999;
+}
+
+.markdown-body .highlight .gi {
+  color: #000;
+  background-color: #dfd;
+}
+
+.markdown-body .highlight .gi .x {
+  color: #000;
+  background-color: #afa;
+}
+
+.markdown-body .highlight .go {
+  color: #888;
+}
+
+.markdown-body .highlight .gp {
+  color: #555;
+}
+
+.markdown-body .highlight .gs {
+  font-weight: bold;
+}
+
+.markdown-body .highlight .gu {
+  color: #800080;
+  font-weight: bold;
+}
+
+.markdown-body .highlight .gt {
+  color: #aa0000;
+}
+
+.markdown-body .highlight .ow {
+  font-weight: bold;
+}
+
+.markdown-body .highlight .w {
+  color: #bbb;
+}
+
+.markdown-body .highlight .sr {
+  color: #017936;
+}
+
+.markdown-body .highlight .ss {
+  color: #8b467f;
+}
+
+.markdown-body .highlight .bp {
+  color: #999;
+}
+
+.markdown-body .highlight .gc {
+  color: #999;
+  background-color: #EAF2F5;
+}
+
+.markdown-body .octicon {
+  font: normal normal 16px octicons-anchor;
+  line-height: 1;
+  display: inline-block;
+  text-decoration: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.markdown-body .octicon-link:before {
+  content: '\f05c';
+}
+
+.markdown-body .task-list-item {
+  list-style-type: none;
+}
+
+.markdown-body .task-list-item+.task-list-item {
+  margin-top: 3px;
+}
+
+.markdown-body .task-list-item input {
+  float: left;
+  margin: 0.3em 0 0.25em -1.6em;
+  vertical-align: middle;
+}
+
+/*
+
+github.com style (c) Vasily Polovnyov <vast@whiteants.net>
+
+*/
+
+.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 0.5em;
+  color: #333;
+  background: #f8f8f8;
+  -webkit-text-size-adjust: none;
+}
+
+.hljs-comment,
+.diff .hljs-header {
+  color: #998;
+  font-style: italic;
+}
+
+.hljs-keyword,
+.css .rule .hljs-keyword,
+.hljs-winutils,
+.nginx .hljs-title,
+.hljs-subst,
+.hljs-request,
+.hljs-status {
+  color: #333;
+  font-weight: bold;
+}
+
+.hljs-number,
+.hljs-hexcolor,
+.ruby .hljs-constant {
+  color: #008080;
+}
+
+.hljs-string,
+.hljs-tag .hljs-value,
+.hljs-doctag,
+.tex .hljs-formula {
+  color: #d14;
+}
+
+.hljs-title,
+.hljs-id,
+.scss .hljs-preprocessor {
+  color: #900;
+  font-weight: bold;
+}
+
+.hljs-list .hljs-keyword,
+.hljs-subst {
+  font-weight: normal;
+}
+
+.hljs-class .hljs-title,
+.hljs-type,
+.vhdl .hljs-literal,
+.tex .hljs-command {
+  color: #458;
+  font-weight: bold;
+}
+
+.hljs-tag,
+.hljs-tag .hljs-title,
+.hljs-rule .hljs-property,
+.django .hljs-tag .hljs-keyword {
+  color: #000080;
+  font-weight: normal;
+}
+
+.hljs-attribute,
+.hljs-variable,
+.lisp .hljs-body,
+.hljs-name {
+  color: #008080;
+}
+
+.hljs-regexp {
+  color: #009926;
+}
+
+.hljs-symbol,
+.ruby .hljs-symbol .hljs-string,
+.lisp .hljs-keyword,
+.clojure .hljs-keyword,
+.scheme .hljs-keyword,
+.tex .hljs-special,
+.hljs-prompt {
+  color: #990073;
+}
+
+.hljs-built_in {
+  color: #0086b3;
+}
+
+.hljs-preprocessor,
+.hljs-pragma,
+.hljs-pi,
+.hljs-doctype,
+.hljs-shebang,
+.hljs-cdata {
+  color: #999;
+  font-weight: bold;
+}
+
+.hljs-deletion {
+  background: #fdd;
+}
+
+.hljs-addition {
+  background: #dfd;
+}
+
+.diff .hljs-change {
+  background: #0086b3;
+}
+
+.hljs-chunk {
+  color: #aaa;
+}
+
+
+</style>
+
+<style> @media print{ .hljs{overflow: visible; word-wrap: break-word !important;} }</style></head><body><div class="markdown-body">
+<h1 id="toc_0">pg_dump/pg_dumpall使用</h1>
+
+<ul>
+<li>
+<a href="#toc_0">pg_dump/pg_dumpall使用</a>
+<ul>
+<li>
+<a href="#toc_1">1. pg_dump 官方帮助</a>
+</li>
+<li>
+<a href="#toc_2">2. 具体的例子</a>
+<ul>
+<li>
+<a href="#toc_3">2.1   导出整个db到SQL文件中</a>
+</li>
+<li>
+<a href="#toc_4">2.2 导出某个db为PG识别的dump格式</a>
+</li>
+<li>
+<a href="#toc_5">2.3 导出某个db到文件夹中</a>
+</li>
+<li>
+<a href="#toc_6">2.4 导出单个或多个schema中的数据</a>
+</li>
+<li>
+<a href="#toc_7">2.5 导出单个或多个对象的数据</a>
+</li>
+<li>
+<a href="#toc_8">2.6 导出对象定义</a>
+</li>
+<li>
+<a href="#toc_9">2.7 导出数据不包括对象定义</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="#toc_10">3.其他的一些参数</a>
+<ul>
+<li>
+<a href="#toc_11">3.1 -b 导出blob对象到dump文件中</a>
+</li>
+<li>
+<a href="#toc_12">3.2 -c 在导出文件中生成 drop object 的命令</a>
+</li>
+<li>
+<a href="#toc_13">3.3 -C 在导出文件中生成 create database 的命令</a>
+</li>
+<li>
+<a href="#toc_14">3.4 -E 以指定的字符集生成dump文件</a>
+</li>
+<li>
+<a href="#toc_15">3.5 --insert 导出数据的时候生成insert into的脚本</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="#toc_16">4.一些限制</a>
+<ul>
+<li>
+<a href="#toc_17">4.1 导出对象可能无法构建完整的系统</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="#toc_18">5.待加强的功能</a>
+<ul>
+<li>
+<a href="#toc_19">5.1 导出一类对象</a>
+</li>
+<li>
+<a href="#toc_20">5.2 从参数文件中读取导出参数</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="#toc_21">6. pg_dumpall</a>
+<ul>
+<li>
+<a href="#toc_22">6.1 pg_dumpall 官方帮助</a>
+</li>
+<li>
+<a href="#toc_23">6.2 -g 备份全局对象</a>
+</li>
+<li>
+<a href="#toc_24">6.3 -r 只备份role</a>
+</li>
+<li>
+<a href="#toc_25">6.4 -t 只备份tablespace</a>
+</li>
+<li>
+<a href="#toc_26">6.5 -s 导出cluster中的全部对象定义</a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+
+<blockquote>
+<p>当前版本： PG 9.5.3</p>
+</blockquote>
+
+<h2 id="toc_1">1. pg_dump 官方帮助</h2>
+
+<pre><code>
+[postgres@dang-db bin]$./pg_dump --help
+
+
+pg_dump dumps a database as a text file or to other formats.
+
+Usage:
+
+  pg_dump [OPTION]... [DBNAME]
+
+General options:
+
+  -f, --file=FILENAME          output file or directory name
+
+  -F, --format=c|d|t|p         output file format (custom, directory, tar,
+
+                               plain text (default))
+
+  -j, --jobs=NUM               use this many parallel jobs to dump
+
+  -v, --verbose                verbose mode
+
+  -V, --version                output version information, then exit
+
+  -Z, --compress=0-9           compression level for compressed formats
+
+  --lock-wait-timeout=TIMEOUT  fail after waiting TIMEOUT for a table lock
+
+  -?, --help                   show this help, then exit
+
+Options controlling the output content:
+
+  -a, --data-only              dump only the data, not the schema
+
+  -b, --blobs                  include large objects in dump
+
+  -c, --clean                  clean (drop) database objects before recreating
+
+  -C, --create                 include commands to create database in dump
+
+  -E, --encoding=ENCODING      dump the data in encoding ENCODING
+
+  -n, --schema=SCHEMA          dump the named schema(s) only
+
+  -N, --exclude-schema=SCHEMA  do NOT dump the named schema(s)
+
+  -o, --oids                   include OIDs in dump
+
+  -O, --no-owner               skip restoration of object ownership in
+
+                               plain-text format
+
+  -s, --schema-only            dump only the schema, no data
+
+  -S, --superuser=NAME         superuser user name to use in plain-text format
+
+  -t, --table=TABLE            dump the named table(s) only
+
+  -T, --exclude-table=TABLE    do NOT dump the named table(s)
+
+  -x, --no-privileges          do not dump privileges (grant/revoke)
+
+  --binary-upgrade             for use by upgrade utilities only
+
+  --column-inserts             dump data as INSERT commands with column names
+
+  --disable-dollar-quoting     disable dollar quoting, use SQL standard quoting
+
+  --disable-triggers           disable triggers during data-only restore
+
+  --enable-row-security        enable row security (dump only content user has
+
+                               access to)
+
+  --exclude-table-data=TABLE   do NOT dump data for the named table(s)
+
+  --if-exists                  use IF EXISTS when dropping objects
+
+  --inserts                    dump data as INSERT commands, rather than COPY
+
+  --no-security-labels         do not dump security label assignments
+
+  --no-synchronized-snapshots  do not use synchronized snapshots in parallel jobs
+
+  --no-tablespaces             do not dump tablespace assignments
+
+  --no-unlogged-table-data     do not dump unlogged table data
+
+  --quote-all-identifiers      quote all identifiers, even if not key words
+
+  --section=SECTION            dump named section (pre-data, data, or post-data)
+
+  --serializable-deferrable    wait until the dump can run without anomalies
+
+  --snapshot=SNAPSHOT          use given snapshot for the dump
+
+  --use-set-session-authorization
+
+                               use SET SESSION AUTHORIZATION commands instead of
+
+                               ALTER OWNER commands to set ownership
+
+Connection options:
+
+  -d, --dbname=DBNAME      database to dump
+
+  -h, --host=HOSTNAME      database server host or socket directory
+
+  -p, --port=PORT          database server port number
+
+  -U, --username=NAME      connect as specified database user
+
+  -w, --no-password        never prompt for password
+
+  -W, --password           force password prompt (should happen automatically)
+
+  --role=ROLENAME          do SET ROLE before dump
+
+If no database name is supplied, then the PGDATABASE environment
+
+variable value is used.
+
+Report bugs to &lt;pgsql-bugs@postgresql.org&gt;.
+
+</code></pre>
+
+<h2 id="toc_2">2. 具体的例子</h2>
+
+<h3 id="toc_3">2.1   导出整个db到SQL文件中</h3>
+
+<pre><code>
+
+$PGHOME/bin/pg_dump testdb &gt; testdb.sql
+
+</code></pre>
+
+<p>通过 --verbose参数可以查看导出的过程：</p>
+
+<pre><code>
+$PGHOME/bin/pg_dump testdb --verbose &gt; testdb.sql
+
+
+
+[postgres@dang-db dump]$$PGHOME/bin/pg_dump testdb --verbose &gt; testdb.sql
+
+pg_dump: reading extensions
+
+pg_dump: identifying extension members
+
+pg_dump: reading schemas
+
+pg_dump: reading user-defined tables
+
+pg_dump: reading user-defined functions
+
+pg_dump: reading user-defined types
+
+pg_dump: reading procedural languages
+
+pg_dump: reading user-defined aggregate functions
+
+pg_dump: reading user-defined operators
+
+pg_dump: reading user-defined operator classes
+
+pg_dump: reading user-defined operator families
+
+pg_dump: reading user-defined text search parsers
+
+pg_dump: reading user-defined text search templates
+
+pg_dump: reading user-defined text search dictionaries
+
+pg_dump: reading user-defined text search configurations
+
+pg_dump: reading user-defined foreign-data wrappers
+
+pg_dump: reading user-defined foreign servers
+
+pg_dump: reading default privileges
+
+pg_dump: reading user-defined collations
+
+pg_dump: reading user-defined conversions
+
+pg_dump: reading type casts
+
+pg_dump: reading transforms
+
+pg_dump: reading table inheritance information
+
+pg_dump: reading event triggers
+
+pg_dump: finding extension tables
+
+pg_dump: finding inheritance relationships
+
+pg_dump: reading column info for interesting tables
+
+pg_dump: finding the columns and types of table &quot;user01.test&quot;
+
+pg_dump: finding the columns and types of table &quot;user02.test01&quot;
+
+pg_dump: finding the columns and types of table &quot;public.test&quot;
+
+pg_dump: finding the columns and types of table &quot;user01.test02&quot;
+
+pg_dump: flagging inherited columns in subtables
+
+pg_dump: reading indexes
+
+pg_dump: reading indexes for table &quot;user01.test&quot;
+
+pg_dump: reading constraints
+
+pg_dump: reading triggers
+
+pg_dump: reading rewrite rules
+
+pg_dump: reading policies
+
+pg_dump: reading row security enabled for table &quot;user01.test&quot;
+
+pg_dump: reading policies for table &quot;user01.test&quot;
+
+pg_dump: reading row security enabled for table &quot;user01.seq_test&quot;
+
+pg_dump: reading policies for table &quot;user01.seq_test&quot;
+
+pg_dump: reading row security enabled for table &quot;user02.test01&quot;
+
+pg_dump: reading policies for table &quot;user02.test01&quot;
+
+pg_dump: reading row security enabled for table &quot;public.test&quot;
+
+pg_dump: reading policies for table &quot;public.test&quot;
+
+pg_dump: reading row security enabled for table &quot;user01.test02&quot;
+
+pg_dump: reading policies for table &quot;user01.test02&quot;
+
+pg_dump: reading large objects
+
+pg_dump: reading dependency data
+
+pg_dump: saving encoding = UTF8
+
+pg_dump: saving standard_conforming_strings = on
+
+pg_dump: saving database definition
+
+pg_dump: creating SCHEMA &quot;public&quot;
+
+pg_dump: creating COMMENT &quot;SCHEMA public&quot;
+
+pg_dump: creating SCHEMA &quot;user01&quot;
+
+pg_dump: creating SCHEMA &quot;user02&quot;
+
+pg_dump: creating EXTENSION &quot;plpgsql&quot;
+
+pg_dump: creating COMMENT &quot;EXTENSION plpgsql&quot;
+
+pg_dump: creating FUNCTION &quot;user01.add(integer, numeric)&quot;
+
+pg_dump: creating TABLE &quot;public.test&quot;
+
+pg_dump: creating SEQUENCE &quot;user01.seq_test&quot;
+
+pg_dump: creating TABLE &quot;user01.test&quot;
+
+pg_dump: creating COMMENT &quot;user01.TABLE test&quot;
+
+pg_dump: creating TABLE &quot;user01.test02&quot;
+
+pg_dump: creating TABLE &quot;user02.test01&quot;
+
+pg_dump: processing data for table &quot;public.test&quot;
+
+pg_dump: dumping contents of table &quot;public.test&quot;
+
+pg_dump: executing SEQUENCE SET seq_test
+
+pg_dump: processing data for table &quot;user01.test&quot;
+
+pg_dump: dumping contents of table &quot;user01.test&quot;
+
+pg_dump: processing data for table &quot;user01.test02&quot;
+
+pg_dump: dumping contents of table &quot;user01.test02&quot;
+
+pg_dump: processing data for table &quot;user02.test01&quot;
+
+pg_dump: dumping contents of table &quot;user02.test01&quot;
+
+pg_dump: creating CONSTRAINT &quot;user01.test_pkey&quot;
+
+pg_dump: setting owner and privileges for DATABASE &quot;testdb&quot;
+
+pg_dump: setting owner and privileges for SCHEMA &quot;public&quot;
+
+pg_dump: setting owner and privileges for COMMENT &quot;SCHEMA public&quot;
+
+pg_dump: setting owner and privileges for ACL &quot;public&quot;
+
+pg_dump: setting owner and privileges for SCHEMA &quot;user01&quot;
+
+pg_dump: setting owner and privileges for SCHEMA &quot;user02&quot;
+
+pg_dump: setting owner and privileges for EXTENSION &quot;plpgsql&quot;
+
+pg_dump: setting owner and privileges for COMMENT &quot;EXTENSION plpgsql&quot;
+
+pg_dump: setting owner and privileges for FUNCTION &quot;user01.add(integer, numeric)&quot;
+
+pg_dump: setting owner and privileges for TABLE &quot;public.test&quot;
+
+pg_dump: setting owner and privileges for SEQUENCE &quot;user01.seq_test&quot;
+
+pg_dump: setting owner and privileges for TABLE &quot;user01.test&quot;
+
+pg_dump: setting owner and privileges for COMMENT &quot;user01.TABLE test&quot;
+
+pg_dump: setting owner and privileges for TABLE &quot;user01.test02&quot;
+
+pg_dump: setting owner and privileges for TABLE &quot;user02.test01&quot;
+
+pg_dump: setting owner and privileges for TABLE DATA &quot;public.test&quot;
+
+pg_dump: setting owner and privileges for SEQUENCE SET &quot;user01.seq_test&quot;
+
+pg_dump: setting owner and privileges for TABLE DATA &quot;user01.test&quot;
+
+pg_dump: setting owner and privileges for TABLE DATA &quot;user01.test02&quot;
+
+pg_dump: setting owner and privileges for TABLE DATA &quot;user02.test01&quot;
+
+pg_dump: setting owner and privileges for CONSTRAINT &quot;user01.test_pkey&quot;
+
+</code></pre>
+
+<h3 id="toc_4">2.2 导出某个db为PG识别的dump格式</h3>
+
+<pre><code>
+$PGHOME/bin/pg_dump -Fc testdb --verbose &gt; testdb.dump
+
+
+[postgres@dang-db dump]$$PGHOME/bin/pg_dump -Fc testdb --verbose &gt; testdb.dump
+
+pg_dump: reading extensions
+
+。。。
+
+pg_dump: dumping contents of table &quot;user01.test&quot;
+
+</code></pre>
+
+<p>参数解释：</p>
+
+<p>-F 决定导出的文件是哪种格式，默认为文本格式，可选项为：</p>
+
+<p>c pg识别的自定义格式</p>
+
+<p>t 导出的对象和数据放在一个tar包里，pg_restore 可以识别</p>
+
+<p>d 导出数据到一个指定的文件夹中,pg_restore 可以识别</p>
+
+<p>p 导出数据到文本中，也是默认的是格式</p>
+
+<h3 id="toc_5">2.3 导出某个db到文件夹中</h3>
+
+<pre><code>
+$PGHOME/bin/pg_dump -Fd testdb -f /postgres/pgsql/dump/pgdump
+
+</code></pre>
+
+<p>注意事项：<br/>
+导出的文件夹必须为空，否则报错：</p>
+
+<pre><code>
+[postgres@dang-db pgdump]$$PGHOME/bin/pg_dump -Fd testdb -f /postgres/pgsql/dump/pgdump
+
+pg_dump: [directory archiver] could not create directory &quot;/postgres/pgsql/dump/pgdump&quot;: File exists
+
+</code></pre>
+
+<p>可以清空或者直接删除该文件夹。</p>
+
+<pre><code>
+
+[postgres@dang-db dump]$ll | grep pgdump
+
+[postgres@dang-db dump]$$PGHOME/bin/pg_dump -Fd testdb -f /postgres/pgsql/dump/pgdump
+
+[postgres@dang-db dump]$ll | grep pgdump
+
+drwx------ 2 postgres postgres     4096 Aug 11 17:58 pgdump
+
+[postgres@dang-db dump]$ll pgdump/
+
+total 2300
+
+-rw-rw-r-- 1 postgres postgres 2350816 Aug 11 17:58 2964.dat.gz
+
+-rw-rw-r-- 1 postgres postgres    2870 Aug 11 17:58 toc.dat
+
+[postgres@dang-db dump]$
+
+[postgres@dang-db dump]$
+
+[postgres@dang-db dump]$rm -rf pgdump/*
+
+[postgres@dang-db dump]$ll pgdump/     
+
+total 0
+
+[postgres@dang-db dump]$$PGHOME/bin/pg_dump -Fd testdb -f /postgres/pgsql/dump/pgdump
+
+[postgres@dang-db dump]$ll pgdump/     
+
+total 2300
+
+-rw-rw-r-- 1 postgres postgres 2350816 Aug 11 17:59 2964.dat.gz
+
+-rw-rw-r-- 1 postgres postgres    2870 Aug 11 17:59 toc.dat
+
+</code></pre>
+
+<p>在使用-Fd的时候可以使用参数 -j 并行导出，加快导出的速度，但同时也会增加db的负载，需要结合当时的负载来决定并行度。另外并行会增加db的连接数，需要保证连接够用。</p>
+
+<pre><code>
+$PGHOME/bin/pg_dump -Fd testdb -f /postgres/pgsql/dump/pgdump -j 5
+
+</code></pre>
+
+<p>只有在-Fd模式才支持并行:</p>
+
+<pre><code>
+
+
+[postgres@dang-db dump]$$PGHOME/bin/pg_dump -Fc testdb -f testdb.dump -j 5
+
+pg_dump: parallel backup only supported by the directory format
+
+</code></pre>
+
+<h3 id="toc_6">2.4 导出单个或多个schema中的数据</h3>
+
+<pre><code>$PGHOME/bin/pg_dump -n user01 testdb -f test_dump.sql --verbose 
+
+</code></pre>
+
+<p>可以通过通配符的方式导出一类schema的对象，假设当前testdb有两个schema：user01,user02，可以用如下方式同时导出两个schema的数据：</p>
+
+<pre><code>
+$PGHOME/bin/pg_dump -n &#39;user*&#39; testdb -f test_dump.sql --verbose 
+
+</code></pre>
+
+<p>利用 -N 参数可以排除某些schema的导出，假设当前testdb有两个schema：user01,user02，可以用如下方式同时导出两个user02的数据：</p>
+
+<pre><code>
+$PGHOME/bin/pg_dump -N user01 testdb -f test_dump.sql --verbose 
+
+</code></pre>
+
+<p>同样，可以利用通配符排除某些schema,假设当前testdb有两个schema：user01,user02，可以用如下方式同时排除两个userXX的数据：</p>
+
+<pre><code>
+$PGHOME/bin/pg_dump -N &#39;user*&#39; testdb -f test_dump.sql --verbose 
+
+</code></pre>
+
+<p>-n -N 可以组合使用排除某些schema，假设当前testdb有10个schema：user01..user10，可以用如下方式同时排除两个user02的数据：</p>
+
+<pre><code>
+$PGHOME/bin/pg_dump -n &#39;user*&#39; -N user02 testdb -f test_dump.sql --verbose 
+
+</code></pre>
+
+<h3 id="toc_7">2.5 导出单个或多个对象的数据</h3>
+
+<p>利用-t 参数可以单独导出某张表的数据,在不指定 -n schema的时候，默认导出public下的数据</p>
+
+<pre><code>
+$PGHOME/bin/pg_dump -t test testdb -f test_dump.sql --verbose 
+
+</code></pre>
+
+<p>需要导出某个schema下的某张表，可以用如下方式：</p>
+
+<pre><code>
+$PGHOME/bin/pg_dump -t user01.test testdb -f test_dump.sql --verbose 
+
+</code></pre>
+
+<p>同样，可以利用通配符导出某类表：</p>
+
+<pre><code>
+$PGHOME/bin/pg_dump -t &#39;user01.test*&#39; testdb -f test_dump.sql --verbose 
+
+</code></pre>
+
+<p>导出多个schema下的同类表：</p>
+
+<pre><code>
+$PGHOME/bin/pg_dump -t &#39;user*.test*&#39; testdb -f test_dump.sql --verbose 
+
+OR
+
+$PGHOME/bin/pg_dump -t &#39;user01.test*&#39; -t &#39;user02.test*&#39; testdb -f test_dump.sql --verbose 
+
+</code></pre>
+
+<p>导出除了单个或多个表之外的所有表：</p>
+
+<pre><code>
+$PGHOME/bin/pg_dump -T &#39;user01.test*&#39; testdb -f test_dump.sql --verbose 
+
+</code></pre>
+
+<p>-t -T 可以组合使用排除部分表:</p>
+
+<pre><code>
+$PGHOME/bin/pg_dump -t &#39;user*.test*&#39; -T &#39;user01.test02&#39; testdb -f test_dump.sql --verbose 
+
+</code></pre>
+
+<p>结合参数 --exclude-table-data的使用，可以在导出数据的时候，仅导出部分表的定义,其他表则导出定义和数据</p>
+
+<pre><code>
+$PGHOME/bin/pg_dump -t &#39;user*.test*&#39; --exclude-table-data=&#39;user02.test*&#39; testdb -f test_dump.sql --verbose 
+
+</code></pre>
+
+<h3 id="toc_8">2.6 导出对象定义</h3>
+
+<p>-s 参数可以仅仅导出对象的定义</p>
+
+<p>导出db中所有对象的定义：</p>
+
+<pre><code>
+$PGHOME/bin/pg_dump -s testdb -f test_dump.sql --verbose     
+
+</code></pre>
+
+<p>导出schema中所有对象的定义：</p>
+
+<pre><code>
+$PGHOME/bin/pg_dump -s -n user01 testdb -f test_dump.sql --verbose     
+
+</code></pre>
+
+<p>导出schema中单个或多个对象的定义：</p>
+
+<pre><code>
+$PGHOME/bin/pg_dump -s -t &#39;user01.test*&#39; testdb -f test_dump.sql --verbose     
+
+</code></pre>
+
+<p>-O 参数可以在导出的时候，不将对象指向某个user，只针对文本类型的导出文件：</p>
+
+<pre><code>
+$PGHOME/bin/pg_dump -s -t &#39;user01.test*&#39; -O testdb -f test_dump.sql --verbose  
+
+</code></pre>
+
+<h3 id="toc_9">2.7 导出数据不包括对象定义</h3>
+
+<p>-a 参数仅仅表的数据，而没有表的定义：</p>
+
+<pre><code>
+$PGHOME/bin/pg_dump -a -t user01.test testdb -f test_dump.sql --verbose 
+
+</code></pre>
+
+<h2 id="toc_10">3.其他的一些参数</h2>
+
+<h3 id="toc_11">3.1 -b 导出blob对象到dump文件中</h3>
+
+<h3 id="toc_12">3.2 -c 在导出文件中生成 drop object 的命令</h3>
+
+<pre><code>
+$PGHOME/bin/pg_dump -s -c -t user01.test testdb -f test_dump.sql --verbose 
+
+[postgres@dang-db dump]$cat test_dump.sql | grep DROP
+
+ALTER TABLE ONLY user01.test DROP CONSTRAINT test_pkey;
+
+DROP TABLE user01.test;
+
+</code></pre>
+
+<p>配合 --if-exists 可以在restore至干净数据库中的时候不产生错误：</p>
+
+<pre><code>
+$PGHOME/bin/pg_dump -s -c --if-exists -t user01.test testdb -f test_dump.sql --verbose 
+
+[postgres@dang-db dump]$cat test_dump.sql | grep DROP                                                         
+
+ALTER TABLE IF EXISTS ONLY user01.test DROP CONSTRAINT IF EXISTS test_pkey;
+
+DROP TABLE IF EXISTS user01.test;
+
+</code></pre>
+
+<p>PS:该选项仅适用于文本类型的备份文件</p>
+
+<h3 id="toc_13">3.3 -C 在导出文件中生成 create database 的命令</h3>
+
+<pre><code>
+$PGHOME/bin/pg_dump -s -C  testdb -f test_dump.sql --verbose 
+
+[postgres@dang-db dump]$cat test_dump.sql | grep &quot;CREATE DATABASE&quot;
+
+CREATE DATABASE testdb WITH TEMPLATE = template0 ENCODING = &#39;UTF8&#39; LC_COLLATE = &#39;en_US.UTF-8&#39; LC_CTYPE = &#39;en_US.UTF-8&#39; TABLESPACE = tbs_test;
+
+[postgres@dang-db dump]$
+
+</code></pre>
+
+<p>配合 -c 可以生成先drop再create database的语句：</p>
+
+<pre><code>
+$PGHOME/bin/pg_dump -s -c -C  testdb -f test_dump.sql --verbose 
+
+[postgres@dang-db dump]$cat test_dump.sql | grep DATABASE
+
+DROP DATABASE testdb;
+
+-- Name: testdb; Type: DATABASE; Schema: -; Owner: user01
+
+CREATE DATABASE testdb WITH TEMPLATE = template0 ENCODING = &#39;UTF8&#39; LC_COLLATE = &#39;en_US.UTF-8&#39; LC_CTYPE = &#39;en_US.UTF-8&#39; TABLESPACE = tbs_test;
+
+ALTER DATABASE testdb OWNER TO user01;
+
+</code></pre>
+
+<p>PS:该选项仅适用于文本类型的备份文件</p>
+
+<h3 id="toc_14">3.4 -E 以指定的字符集生成dump文件</h3>
+
+<h3 id="toc_15">3.5 --insert 导出数据的时候生成insert into的脚本</h3>
+
+<pre><code>
+
+
+$PGHOME/bin/pg_dump -t user01.test --insert testdb -f test_dump.sql --verbose 
+
+</code></pre>
+
+<p>此种方式的insert into 为：INSERT INTO test VALUES (1, &#39;test&#39;);</p>
+
+<p>通过 --column-insert 可以生成带列名的insert into：INSERT INTO test (id, name) VALUES (1, &#39;test&#39;); :</p>
+
+<pre><code>
+
+
+$PGHOME/bin/pg_dump -t user01.test --column-insert testdb -f test_dump.sql --verbose 
+
+</code></pre>
+
+<h2 id="toc_16">4.一些限制</h2>
+
+<h3 id="toc_17">4.1 导出对象可能无法构建完整的系统</h3>
+
+<p>在使用 -t 或者 -n 导出部分表或者部分schema的时候，不会将与之依赖的对象一同导出，因此在构建现有系统的开发测试环境的时候，需要结合业务系统来梳理出所有相关</p>
+
+<h2 id="toc_18">5.待加强的功能</h2>
+
+<h3 id="toc_19">5.1 导出一类对象</h3>
+
+<p>目前无法通过参数控制来导出一类对象，比如单独导出表的定义，函数的定义等。</p>
+
+<h3 id="toc_20">5.2 从参数文件中读取导出参数</h3>
+
+<p>在通过 -t 或者 -n 导出部分表或者schema的时候，如果这些表或者schema比较多且无法通过通配符匹配的时候，希望是将其写在参数文件中，pg_dump来读取，提高了pg_dump命令的可读性和便利性。</p>
+
+<h2 id="toc_21">6. pg_dumpall</h2>
+
+<p>pg_dumpall 可以用来备份整个cluster中的全部database、备份global对象等。正因此如此，需要使用superuser来执行pg_dumpall以便生产完整的备份文件。</p>
+
+<p>pg_dumpall 只能生成文本类型的备份文件，备份过程不支持压缩和并行，因此不建议使用pg_dumpall来备份数据。</p>
+
+<p>pg_dumpall 备份全部database的过程通过循环调用 pg_dump 来实现，因此，pg_dumpall 更适合用来备份一些全局的role、tablespace、database定义等。</p>
+
+<h3 id="toc_22">6.1 pg_dumpall 官方帮助</h3>
+
+<pre><code>
+[postgres@dang-db dump]$$PGHOME/bin/pg_dumpall --help
+
+pg_dumpall extracts a PostgreSQL database cluster into an SQL script file.
+
+
+
+Usage:
+
+  pg_dumpall [OPTION]...
+
+
+
+General options:
+
+  -f, --file=FILENAME          output file name
+
+  -V, --version                output version information, then exit
+
+  --lock-wait-timeout=TIMEOUT  fail after waiting TIMEOUT for a table lock
+
+  -?, --help                   show this help, then exit
+
+
+
+Options controlling the output content:
+
+  -a, --data-only              dump only the data, not the schema
+
+  -c, --clean                  clean (drop) databases before recreating
+
+  -g, --globals-only           dump only global objects, no databases
+
+  -o, --oids                   include OIDs in dump
+
+  -O, --no-owner               skip restoration of object ownership
+
+  -r, --roles-only             dump only roles, no databases or tablespaces
+
+  -s, --schema-only            dump only the schema, no data
+
+  -S, --superuser=NAME         superuser user name to use in the dump
+
+  -t, --tablespaces-only       dump only tablespaces, no databases or roles
+
+  -x, --no-privileges          do not dump privileges (grant/revoke)
+
+  --binary-upgrade             for use by upgrade utilities only
+
+  --column-inserts             dump data as INSERT commands with column names
+
+  --disable-dollar-quoting     disable dollar quoting, use SQL standard quoting
+
+  --disable-triggers           disable triggers during data-only restore
+
+  --if-exists                  use IF EXISTS when dropping objects
+
+  --inserts                    dump data as INSERT commands, rather than COPY
+
+  --no-security-labels         do not dump security label assignments
+
+  --no-tablespaces             do not dump tablespace assignments
+
+  --no-unlogged-table-data     do not dump unlogged table data
+
+  --quote-all-identifiers      quote all identifiers, even if not key words
+
+  --use-set-session-authorization
+
+                               use SET SESSION AUTHORIZATION commands instead of
+
+                               ALTER OWNER commands to set ownership
+
+
+
+Connection options:
+
+  -d, --dbname=CONNSTR     connect using connection string
+
+  -h, --host=HOSTNAME      database server host or socket directory
+
+  -l, --database=DBNAME    alternative default database
+
+  -p, --port=PORT          database server port number
+
+  -U, --username=NAME      connect as specified database user
+
+  -w, --no-password        never prompt for password
+
+  -W, --password           force password prompt (should happen automatically)
+
+  --role=ROLENAME          do SET ROLE before dump
+
+
+
+If -f/--file is not used, then the SQL script will be written to the standard
+
+output.
+
+
+
+Report bugs to &lt;pgsql-bugs@postgresql.org&gt;.
+
+</code></pre>
+
+<h3 id="toc_23">6.2 -g 备份全局对象</h3>
+
+<pre><code>
+$PGHOME/bin/pg_dumpall -g -f test_dump.sql --verbose 
+
+</code></pre>
+
+<p>包括role和tablespace，不包括database。</p>
+
+<h3 id="toc_24">6.3 -r 只备份role</h3>
+
+<pre><code>
+$PGHOME/bin/pg_dumpall -r -f test_dump.sql --verbose 
+
+</code></pre>
+
+<h3 id="toc_25">6.4 -t 只备份tablespace</h3>
+
+<pre><code>
+$PGHOME/bin/pg_dumpall -t -f test_dump.sql --verbose 
+
+</code></pre>
+
+<h3 id="toc_26">6.5 -s 导出cluster中的全部对象定义</h3>
+
+<pre><code>
+$PGHOME/bin/pg_dumpall -s -f test_dump.sql --verbose 
+
+</code></pre>
+
+<p>包括global对象以及每个database中的对象。</p>
+
+</div></body>
+
+</html>
