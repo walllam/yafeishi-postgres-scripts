@@ -1,7 +1,7 @@
 ../adb21_20160826/configure --prefix=/postgres/adb2_1/pgsql_xc --with-segsize=1 --with-wal-segsize=64 --with-wal-blocksize=64 --with-perl --with-python --with-openssl --with-pam  --with-libxml --with-libxslt --enable-thread-safety  --enable-debug  --enable-cassert CFLAGS='-O0 -ggdb3 -DGTM_DEBUG' && make install-world-contrib-recurse >/dev/null &
 
 
-../adb21_20160826/configure --prefix=/postgres/adb2_1/pgsql_xc --with-segsize=8 --with-wal-segsize=64 --with-wal-blocksize=64 --with-perl --with-python --with-openssl --with-pam --without-ldap --with-libxml --with-libxslt --enable-thread-safety --enable-depend --enable-debug --enable-cassert CFLAGS='-O0 -ggdb3 -DGTM_DEBUG'
+../adb21_20160901/configure --prefix=/postgres/adb2_1/pgsql_xc --with-segsize=8 --with-wal-segsize=64 --with-wal-blocksize=64 --with-perl --with-python --with-openssl --with-pam --without-ldap --with-libxml --with-libxslt --enable-thread-safety --enable-depend --enable-debug --enable-cassert CFLAGS='-O0 -ggdb3 -DGTM_DEBUG'
 
 
 make -j4 all && make install
@@ -123,6 +123,10 @@ SELECT txid_current();
 select * from pg_proc; 
 
 select pg_get_function_arguments('bt_page_stats'::regproc);
+select pg_get_function_identity_arguments('bt_page_stats'::regproc);
+
+SELECT proargnames from pg_proc where proname ='bt_page_stats'
+
 
 
 # parameter 
