@@ -1,7 +1,7 @@
-../adb21_20160826/configure --prefix=/postgres/adb2_1/pgsql_xc --with-segsize=1 --with-wal-segsize=64 --with-wal-blocksize=64 --with-perl --with-python --with-openssl --with-pam  --with-libxml --with-libxslt --enable-thread-safety  --enable-debug  --enable-cassert CFLAGS='-O0 -ggdb3 -DGTM_DEBUG' && make install-world-contrib-recurse >/dev/null &
+../adb_devel/configure --prefix=/postgres/adb2_1/pgsql_xc --with-segsize=1 --with-wal-segsize=64 --with-wal-blocksize=64 --with-perl --with-python --with-openssl --with-pam  --with-libxml --with-libxslt --enable-thread-safety  --enable-debug  --enable-cassert CFLAGS='-O0 -ggdb3 -DGTM_DEBUG' && make install-world-contrib-recurse >/dev/null &
 
 
-../adb21_20160901/configure --prefix=/postgres/adb2_1/pgsql_xc --with-segsize=8 --with-wal-segsize=64 --with-wal-blocksize=64 --with-perl --with-python --with-openssl --with-pam --without-ldap --with-libxml --with-libxslt --enable-thread-safety --enable-depend --enable-debug --enable-cassert CFLAGS='-O0 -ggdb3 -DGTM_DEBUG'
+../adb_devel/configure --prefix=/home/danghb/adb21/pgsql_xc --with-segsize=8 --with-wal-segsize=64 --with-wal-blocksize=64 --with-perl --with-python --with-openssl --with-pam --without-ldap --with-libxml --with-libxslt --enable-thread-safety --enable-depend --enable-debug --enable-cassert CFLAGS='-O0 -ggdb3 -DGTM_DEBUG'
 
 
 make -j4 all && make install
@@ -107,13 +107,31 @@ select pg_database_size('dangdb');
 select pg_database.datname, 
 pg_database_size(pg_database.datname) AS size 
 from pg_database; 
-select pg_size_pretty(pg_database_size('dangdb')); 
+select pg_size_pretty(pg_database_size('dangtest')); 
 select pg_relation_size('test');  # table size
 select pg_size_pretty(pg_relation_size('test'));
 select pg_size_pretty(pg_total_relation_size('test')); 
 select spcname from pg_tablespace;  
 select pg_size_pretty(pg_tablespace_size('pg_default'));
+SELECT pg_size_pretty(SUM(pg_total_relation_size(quote_ident(schemaname) || '.' || quote_ident(tablename)))::BIGINT) 
+FROM pg_tables WHERE schemaname = 'user06';
+SELECT schema_name, 
+       pg_size_pretty(sum(table_size)),
+       trunc((sum(table_size) / database_size) * 100,2)||'%'
+FROM (
+  SELECT pg_catalog.pg_namespace.nspname as schema_name,
+         pg_relation_size(pg_catalog.pg_class.oid) as table_size,
+         sum(pg_relation_size(pg_catalog.pg_class.oid)) over () as database_size
+  FROM   pg_catalog.pg_class
+     JOIN pg_catalog.pg_namespace ON relnamespace = pg_catalog.pg_namespace.oid
+) t
+GROUP BY schema_name, database_size
+order by  schema_name
+;
+
 SELECT current_database();
+SELECT current_user;
+select current_schema;
 select current_date;
 select current_time;
 select current_schemas(true);
@@ -125,8 +143,15 @@ select * from pg_proc;
 select pg_get_function_arguments('bt_page_stats'::regproc);
 select pg_get_function_identity_arguments('bt_page_stats'::regproc);
 
-SELECT proargnames from pg_proc where proname ='bt_page_stats'
+SELECT proargnames from pg_proc where proname ='bt_page_stats';
 
+select datname,datfrozenxid,age(datfrozenxid) from pg_database;
+select b.nspname,a.relname,a.relfrozenxid,age(a.relfrozenxid) 
+from pg_class a, pg_namespace b 
+where a.relnamespace=b.oid and a.relkind='r' 
+order by a.relfrozenxid::text::int8 limit 10;
+
+select extract(epoch FROM (date2 - date1)) from test_time;
 
 
 # parameter 
@@ -142,6 +167,7 @@ set para_name to value;
 RESET max_connections;
 
 
+share buffer host_mem*0.25
 
 select distinct category from pg_settings order by 1;
 select name,setting,unit,context,short_desc,category
