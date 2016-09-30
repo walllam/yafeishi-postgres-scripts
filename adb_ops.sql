@@ -1,13 +1,17 @@
 ../adb_devel/configure --prefix=/postgres/adb2_1/pgsql_xc --with-segsize=1 --with-wal-segsize=64 --with-wal-blocksize=64 --with-perl --with-python --with-openssl --with-pam  --with-libxml --with-libxslt --enable-thread-safety  --enable-debug  --enable-cassert CFLAGS='-O0 -ggdb3 -DGTM_DEBUG' && make install-world-contrib-recurse >/dev/null &
 
+rm -rf * && ../adb_devel/configure --prefix=/postgres/adb2_1/pgsql_xc --with-blocksize=8 --with-segsize=8 --with-wal-segsize=64 --with-wal-blocksize=64 --with-perl --with-python --with-openssl --with-pam   --with-libxml --with-libxslt --enable-thread-safety  --enable-debug  --enable-cassert CFLAGS='-DADB -O0 -ggdb3 -DGTM_DEBUG' && make install-world-contrib-recurse >/dev/null   
 
-../adb_devel/configure --prefix=/home/danghb/adb21/pgsql_xc --with-segsize=8 --with-wal-segsize=64 --with-wal-blocksize=64 --with-perl --with-python --with-openssl --with-pam --without-ldap --with-libxml --with-libxslt --enable-thread-safety --enable-depend --enable-debug --enable-cassert CFLAGS='-O0 -ggdb3 -DGTM_DEBUG'
+
+
+rm -rf * && ../adb_devel/configure --prefix=/home/danghb/adb21/pgsql_xc --with-blocksize=8 --with-segsize=8 --with-wal-segsize=64 --with-wal-blocksize=64 --with-perl --with-python --with-openssl --with-pam  --with-ldap --with-libxml --with-libxslt --enable-thread-safety  --enable-debug  --enable-cassert CFLAGS='-DADB -O0 -ggdb3 -DGTM_DEBUG' && make install-world-contrib-recurse >/dev/null   
+
 
 
 make -j4 all && make install
 cd contrib && make  && make install
 
-#pormpt
+#prompt
 \set PROMPT1 '%n@%m %~%R%# %> > ' 
 
 username@dbname:port>
@@ -99,6 +103,29 @@ GTM master
 gtm_proxy
 coordinator
 datanode
+
+deploy all
+deploy localhost3
+add gtm slave gtm_s localhost3 6666 /home/danghb/adb21/pgsql_data/gtm
+add gtm_proxy gtm_proxy2 localhost3 6677 /home/danghb/adb21/pgsql_data/gtm_proxy
+
+
+cat > $datanode1SpecificExtraConfig <<EOF
+archive_command = 'cp -i %p /home/danghb/adb21/pgsql_data/archive/dn01/%f'
+EOF
+
+archive_command = 'cp -i %p /home/danghb/adb21/pgsql_data/archive/dn01/%f'
+add datanode slave datanode1 localhost3 /home/danghb/adb21/pgsql_data/dn01 /home/danghb/adb21/pgsql_data/archive/dn01
+add datanode slave datanode2 localhost3 /home/danghb/adb21/pgsql_data/dn02 /home/danghb/adb21/pgsql_data/archive/dn02
+
+
+add coordinator master coord3 localhost4 7434 20073  /home/danghb/adb21/pgsql_data/cn03
+add datanode master datanode3 localhost4 17434 /home/danghb/adb21/pgsql_data/dn03 
+
+
+remove datanode slave datanode1
+remove datanode master datanode3
+remove coordinator master coord3 
 
 
 ##psql select
@@ -233,6 +260,8 @@ explain select * from test where id=1;
 explain analyze select * from test where id=1;
 explain (analyze,buffers) select * from test where id=1;
 explain (analyze,verbose,timing,buffers,costs) select * from test where id<1001;
+
+
 
 
 # pg_dump
@@ -513,4 +542,8 @@ order by
 	nspname,
 	a.type;
 	
-	
+
+
+-- Oracle兼容 jdbc配置：
+jdbc:postgresql://10.78.187.108:5432/postgres?binaryTransfer=False&forceBinary=False&grammar=oracle
+set grammar = postgres    or   set grammar = oracle	

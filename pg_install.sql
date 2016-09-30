@@ -4,6 +4,16 @@
 
 
 ./configure --prefix=/postgre/pgsql/9.5.3 --with-pgport=5532 --with-perl --with-python 
+
+
+./configure --prefix=/postgres/pgsql/9.3.9 --with-pgport=6432 --with-blocksize=8 --with-segsize=8 --with-wal-segsize=8 --with-wal-blocksize=64 --with-perl --with-python --with-openssl --with-pam --without-ldap --with-libxml --with-libxslt --enable-thread-safety --enable-depend --enable-debug --enable-cassert CFLAGS='-O0 -ggdb3 -DGTM_DEBUG'
+
+/postgres/pgsql/9.3.9/bin/initdb -D /postgres/pgsql/pg939data
+
+/postgres/pgsql/9.3.9/bin/postgres -D /postgres/pgsql/pg939data  >logfile 2>&1 &
+
+/postgres/pgsql/9.3.9/bin/psql -p 6432
+
 make  && make install
 cd contrib && make  && make install
 
