@@ -14,6 +14,12 @@
 
 /postgres/pgsql/9.3.9/bin/psql -p 6432
 
+
+export PGHOME=/postgres/pgsql/9.3.9/\n
+export PGDATA=/postgres/pgsql/pg939data/\n
+export PGPORT=6432\n
+export LD_LIBRARY_PATH=/postgres/pgsql/9.3.9/lib\n
+
 make  && make install
 cd contrib && make  && make install
 

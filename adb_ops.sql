@@ -1,3 +1,5 @@
+
+--------- 2.1 install start ------------------
 ../adb_devel/configure --prefix=/postgres/adb2_1/pgsql_xc --with-segsize=1 --with-wal-segsize=64 --with-wal-blocksize=64 --with-perl --with-python --with-openssl --with-pam  --with-libxml --with-libxslt --enable-thread-safety  --enable-debug  --enable-cassert CFLAGS='-O0 -ggdb3 -DGTM_DEBUG' && make install-world-contrib-recurse >/dev/null &
 
 rm -rf * && ../adb_devel/configure --prefix=/postgres/adb2_1/pgsql_xc --with-blocksize=8 --with-segsize=8 --with-wal-segsize=64 --with-wal-blocksize=64 --with-perl --with-python --with-openssl --with-pam   --with-libxml --with-libxslt --enable-thread-safety  --enable-debug  --enable-cassert CFLAGS='-DADB -O0 -ggdb3 -DGTM_DEBUG' && make install-world-contrib-recurse >/dev/null   
@@ -5,11 +7,49 @@ rm -rf * && ../adb_devel/configure --prefix=/postgres/adb2_1/pgsql_xc --with-blo
 
 
 rm -rf * && ../adb_devel/configure --prefix=/home/danghb/adb21/pgsql_xc --with-blocksize=8 --with-segsize=8 --with-wal-segsize=64 --with-wal-blocksize=64 --with-perl --with-python --with-openssl --with-pam  --with-ldap --with-libxml --with-libxslt --enable-thread-safety  --enable-debug  --enable-cassert CFLAGS='-DADB -O0 -ggdb3 -DGTM_DEBUG' && make install-world-contrib-recurse >/dev/null   
-
-
-
 make -j4 all && make install
 cd contrib && make  && make install
+
+
+
+ssh-keygen
+ssh-copy-id -i .ssh/id_rsa.pub localhost2
+ssh-copy-id -i .ssh/id_rsa.pub localhost3
+ssh-copy-id -i .ssh/id_rsa.pub localhost4
+
+
+vi /etc/security/limits.conf
+danghb soft core unlimited
+danghb soft nofile 65536
+danghb hard nofile 65536
+danghb soft nproc 131072
+danghb hard nproc 131072
+danghb soft stack unlimited
+
+--------- 2.1 install end------------------
+
+--------- 2.2 install start ------------------
+yum -y install libssh2-devel
+rm -rf * && ../adb_devel/configure --prefix=/home/danghb/adb22/pgsql_xc --with-blocksize=8  --with-wal-segsize=64 --with-wal-blocksize=64 --with-perl --with-python --with-openssl --with-pam  --with-ldap --with-libxml --with-libxslt --enable-thread-safety  --enable-debug  --enable-cassert CFLAGS='-DADB -O0 -ggdb3 -DGTM_DEBUG' && make install-world-contrib-recurse >/dev/null   
+make -j4 all && make install
+cd contrib && make  && make install
+
+
+rm -rf * && ../adb_devel/configure --prefix=/home/danghb/adb22/adbmgr --with-blocksize=8  --with-wal-segsize=64 --with-wal-blocksize=64 --with-perl --with-python --with-openssl --with-pam  --with-ldap --with-libxml --with-libxslt --enable-thread-safety  --enable-debug  --enable-cassert CFLAGS='-DADB -O0 -ggdb3 -DGTM_DEBUG' && make install-world-contrib-recurse >/dev/null   
+make -j4 all && make install
+cd contrib && make  && make install
+
+
+ path=/home/wln/gitmaster
+  #make clean
+  chmod 755 $path/configure
+  echo 'configure'
+  $path/configure --prefix=/home/wln/install --with-perl --with-python --with-openssl --with-pam --with-ldap --with-libxml --with-libxslt --enable-thread-safety --enable-debug --enable-cassert --enable-depend CFLAGS='-DADB -O0 -DWAL_DEBUG'
+  echo 'make install'
+make install-world-contrib-recurse  > /dev/null
+
+
+--------- 2.2 install end------------------
 
 #prompt
 \set PROMPT1 '%n@%m %~%R%# %> > ' 
@@ -106,8 +146,10 @@ datanode
 
 deploy all
 deploy localhost3
-add gtm slave gtm_s localhost3 6666 /home/danghb/adb21/pgsql_data/gtm
-add gtm_proxy gtm_proxy2 localhost3 6677 /home/danghb/adb21/pgsql_data/gtm_proxy
+
+
+add gtm slave gtm_s host201 7666 /home/danghb/adb21/pgsql_data/gtm
+add gtm_proxy gtm_proxy2 host201 6677 /home/danghb/adb21/pgsql_data/gtm_proxy
 
 
 cat > $datanode1SpecificExtraConfig <<EOF
@@ -115,22 +157,39 @@ archive_command = 'cp -i %p /home/danghb/adb21/pgsql_data/archive/dn01/%f'
 EOF
 
 archive_command = 'cp -i %p /home/danghb/adb21/pgsql_data/archive/dn01/%f'
-add datanode slave datanode1 localhost3 /home/danghb/adb21/pgsql_data/dn01 /home/danghb/adb21/pgsql_data/archive/dn01
-add datanode slave datanode2 localhost3 /home/danghb/adb21/pgsql_data/dn02 /home/danghb/adb21/pgsql_data/archive/dn02
+add datanode slave datanode1 host201 /home/danghb/adb21/pgsql_data/dn01 /home/danghb/adb21/pgsql_data/archive/dn01
+add datanode slave datanode2 host201 /home/danghb/adb21/pgsql_data/dn02 /home/danghb/adb21/pgsql_data/archive/dn02
+
+add coordinator slave coord1 localhost3 /home/danghb/adb21/pgsql_data/cn01 /home/danghb/adb21/pgsql_data/archive/cn01
+add coordinator slave coord2 localhost3 /home/danghb/adb21/pgsql_data/cn02 /home/danghb/adb21/pgsql_data/archive/cn02
 
 
 add coordinator master coord3 localhost4 7434 20073  /home/danghb/adb21/pgsql_data/cn03
 add datanode master datanode3 localhost4 17434 /home/danghb/adb21/pgsql_data/dn03 
 
-
+remove gtm slave
 remove datanode slave datanode1
 remove datanode master datanode3
 remove coordinator master coord3 
+remove coordinator slave coord3 
+
+start datanode slave datanode1
+
+show configure all
+show configure datanode
+
+
+## failover 之后都需要add相应的slave
+
+failover gtm
+failover coordinator nodename |
+failover datanode datanode1 
 
 
 ##psql select
 select pgxc_pool_reload();
-select pg_database_size('dangdb');   
+select pg_relation_filepath('root.tabletest');
+select pg_database_size('bmsql');   
 select pg_database.datname, 
 pg_database_size(pg_database.datname) AS size 
 from pg_database; 
@@ -141,7 +200,7 @@ select pg_size_pretty(pg_total_relation_size('test'));
 select spcname from pg_tablespace;  
 select pg_size_pretty(pg_tablespace_size('pg_default'));
 SELECT pg_size_pretty(SUM(pg_total_relation_size(quote_ident(schemaname) || '.' || quote_ident(tablename)))::BIGINT) 
-FROM pg_tables WHERE schemaname = 'user06';
+FROM pg_tables WHERE schemaname = 'bmsql2';
 SELECT schema_name, 
        pg_size_pretty(sum(table_size)),
        trunc((sum(table_size) / database_size) * 100,2)||'%'
@@ -164,8 +223,35 @@ select current_time;
 select current_schemas(true);
 SELECT pg_ls_dir('pg_log');
 SELECT txid_current();
+select txid_current_snapshot();
+select pg_current_xlog_location();
+select pg_last_xlog_replay_location();
+select pg_last_xact_replay_timestamp();
+select pg_xlogfile_name('1/58AA17B0');
+select * from pg_xlogfile_name_offset('1/F8002B70');
+select * from pg_xlogfile_name_offset(pg_current_xlog_location());
 
+select  pg_xlogfile_name_offset(pg_current_xlog_location())
+union all
+select pg_xlogfile_name_offset(replay_location)
+from pg_stat_replication;
+
+./check_postgres_hot_standby_delay --dbhost=host201,host200 --dbport=17433,17433  --dbuser=danghb --dbname=bmsql --warning='1'
+
+
+select pg_xlog_location_diff(pg_stat_replication.sent_location, pg_stat_replication.replay_location)
+from pg_stat_replication;
+
+
+SELECT CASE WHEN pg_last_xlog_receive_location() = pg_last_xlog_replay_location()
+              THEN 0
+            ELSE EXTRACT (EPOCH FROM now() - pg_last_xact_replay_timestamp())
+       END AS log_delay;
+       
 select * from pg_proc; 
+select * from pg_proc where proname like '%loca%';
+
+select * from pg_stat_replication ;
 
 select pg_get_function_arguments('bt_page_stats'::regproc);
 select pg_get_function_identity_arguments('bt_page_stats'::regproc);
@@ -262,9 +348,10 @@ explain (analyze,buffers) select * from test where id=1;
 explain (analyze,verbose,timing,buffers,costs) select * from test where id<1001;
 
 
-
+explain (verbose,costs false)  
 
 # pg_dump
+
 
 
 # view object
@@ -547,3 +634,67 @@ order by
 -- Oracle兼容 jdbc配置：
 jdbc:postgresql://10.78.187.108:5432/postgres?binaryTransfer=False&forceBinary=False&grammar=oracle
 set grammar = postgres    or   set grammar = oracle	
+
+
+
+# benchmarksql
+# v4.1.1
+conn=jdbc:postgresql://host200:7432/bmsql?binaryTransfer=False&forceBinary=False&assumeMinServerVersion=9.0
+create database bmsql;
+\c bmsql
+create user bmsql1 superuser;
+create schema bmsql1 authorization bmsql1;
+
+./runSQL.sh props.adb2 sqlTableDrops
+./runSQL.sh props.adb2 sqlTableCreates
+./runSQL.sh props.adb2 sqlTableCopies_100w
+./runSQL.sh props.adb2 sqlIndexCreates
+
+./runSQL.sh props.adb sqlTableCreates
+./runSQL.sh props.adb sqlTableCopies
+./runSQL.sh props.adb sqlIndexCreates
+./runSQL.sh props.adb sqlIndexDrops
+./runSQL.sh props.adb sqlTableTruncates
+./runSQL.sh props.adb sqlTableDrops
+
+./runLoader.sh props.adb numWarehouses 100 fileLocation /tmp/adb/
+./runBenchmark.sh  props.adb
+
+2016-10-14 07:21:18,817  INFO - Term-00, 
+2016-10-14 07:21:18,817  INFO - Term-00, 
+2016-10-14 07:21:18,817  INFO - Term-00, Measured tpmC (NewOrders) = 110.39
+2016-10-14 07:21:18,817  INFO - Term-00, Measured tpmTOTAL = 247.19
+2016-10-14 07:21:18,817  INFO - Term-00, Session Start     = 2016-10-13 19:06:29
+2016-10-14 07:21:18,817  INFO - Term-00, Session End       = 2016-10-14 07:21:18
+2016-10-14 07:21:18,817  INFO - Term-00, Transaction Count = 181648
+
+grep "ERROR: current transaction is aborted" 12h.log |wc -l
+grep "ERROR: Abort transaction for gxid" 12h.log |wc -l
+
+
+## lock
+SELECT blocked_locks.pid     AS blocked_pid,
+         blocked_activity.usename  AS blocked_user,
+         blocking_locks.pid     AS blocking_pid,
+         blocking_activity.usename AS blocking_user,
+         blocked_activity.query    AS blocked_statement,
+         blocking_activity.query   AS current_statement_in_blocking_process,
+         blocked_activity.application_name AS blocked_application,
+         blocking_activity.application_name AS blocking_application
+   FROM  pg_catalog.pg_locks         blocked_locks
+    JOIN pg_catalog.pg_stat_activity blocked_activity  ON blocked_activity.pid = blocked_locks.pid
+    JOIN pg_catalog.pg_locks         blocking_locks 
+        ON blocking_locks.locktype = blocked_locks.locktype
+        AND blocking_locks.DATABASE IS NOT DISTINCT FROM blocked_locks.DATABASE
+        AND blocking_locks.relation IS NOT DISTINCT FROM blocked_locks.relation
+        AND blocking_locks.page IS NOT DISTINCT FROM blocked_locks.page
+        AND blocking_locks.tuple IS NOT DISTINCT FROM blocked_locks.tuple
+        AND blocking_locks.virtualxid IS NOT DISTINCT FROM blocked_locks.virtualxid
+        AND blocking_locks.transactionid IS NOT DISTINCT FROM blocked_locks.transactionid
+        AND blocking_locks.classid IS NOT DISTINCT FROM blocked_locks.classid
+        AND blocking_locks.objid IS NOT DISTINCT FROM blocked_locks.objid
+        AND blocking_locks.objsubid IS NOT DISTINCT FROM blocked_locks.objsubid
+        AND blocking_locks.pid != blocked_locks.pid
+ 
+    JOIN pg_catalog.pg_stat_activity blocking_activity ON blocking_activity.pid = blocking_locks.pid
+   WHERE NOT blocked_locks.GRANTED;
