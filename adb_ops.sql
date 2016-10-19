@@ -49,6 +49,52 @@ cd contrib && make  && make install
 make install-world-contrib-recurse  > /dev/null
 
 
+export ADB2_1_HOME=/home/danghb/adb21/pgsql_xc
+export ADB2_1_DATA=/home/danghb/adb21/pgsql_data
+export PGHOME=$ADB2_1_HOME
+#export PGDATA=/postgre/pgsql/data
+export PATH=$PGHOME/bin:$PATH:$HOME/bin:/home/danghb/databus/gradle-3.0/bin
+
+
+export ADB2_2_HOME=/home/danghb/adb22/pgsql_xc
+export ADB2_2_DATA=/home/danghb/adb22/pgsql_data
+export PGHOME=$ADB2_2_HOME
+#export PGDATA=/postgre/pgsql/data
+export PATH=$PGHOME/bin:$PATH:$HOME/bin:/home/danghb/databus/gradle-3.0/bin
+
+
+## adbmgr
+initmgr -D /home/danghb/adb22/adbmgr
+mgr_ctl start -D /home/danghb/adb22/adbmgr &
+adbmgrd -D /home/danghb/adb22/adbmgr &
+
+add host host201(port=22,protocol='ssh',pghome='/home/danghb/adb22/pgsql_xc',address="10.20.16.201",agentport=7632,user='danghb');
+add host host200(port=22,protocol='ssh',pghome='/home/danghb/adb22/pgsql_xc',address="10.20.16.200",agentport=7632,user='danghb');
+
+deploy all
+start agent all
+
+# add
+1、	添加coordinator信息：
+add coordinator coord1(path = '/home/danghb/adb22/pgsql_data/cn01', host='host200', port=7642);
+add coordinator coord2(path = '/home/danghb/adb22/pgsql_data/cn01', host='host201', port=7642);
+
+2、	添加datanode master信息：
+add datanode master db1(path = '/home/danghb/adb22/pgsql_data/dn01', host='host200', port=7652);
+add datanode master db2(path = '/home/danghb/adb22/pgsql_data/dn01', host='host201', port=7652);
+
+3、	添加datanode slave信息，添加slave的时候，由于slave与master同名，所以在master关键字后面写上刚才添加的master名字即可。
+add datanode slave master db1(host='host201',port=xxx,path='xxx');
+4、	添加gtm信息
+add gtm master gtm(host='host200',port=7766, path='/home/danghb/adb22/pgsql_data/gtm');
+add gtm slave gtm(host='host201',port=7766, path='/home/danghb/adb22/pgsql_data/gtm');
+
+# alter
+alter datanode master db2(path = '/home/danghb/adb22/pgsql_data/dn02');
+
+# drop
+drop datanode master db2;
+
 --------- 2.2 install end------------------
 
 #prompt
