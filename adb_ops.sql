@@ -1,7 +1,5 @@
 
 --------- 2.1 install start ------------------
-../adb_devel/configure --prefix=/postgres/adb2_1/pgsql_xc --with-segsize=1 --with-wal-segsize=64 --with-wal-blocksize=64 --with-perl --with-python --with-openssl --with-pam  --with-libxml --with-libxslt --enable-thread-safety  --enable-debug  --enable-cassert CFLAGS='-O0 -ggdb3 -DGTM_DEBUG' && make install-world-contrib-recurse >/dev/null &
-
 rm -rf * && ../adb_devel/configure --prefix=/postgres/adb2_1/pgsql_xc --with-blocksize=8 --with-segsize=8 --with-wal-segsize=64 --with-wal-blocksize=64 --with-perl --with-python --with-openssl --with-pam   --with-libxml --with-libxslt --enable-thread-safety  --enable-debug  --enable-cassert CFLAGS='-DADB -O0 -ggdb3 -DGTM_DEBUG' && make install-world-contrib-recurse >/dev/null   
 
 
@@ -84,16 +82,22 @@ add datanode master db1(path = '/home/danghb/adb22/pgsql_data/dn01', host='host2
 add datanode master db2(path = '/home/danghb/adb22/pgsql_data/dn01', host='host201', port=7652);
 
 3、	添加datanode slave信息，添加slave的时候，由于slave与master同名，所以在master关键字后面写上刚才添加的master名字即可。
-add datanode slave master db1(host='host201',port=xxx,path='xxx');
+add datanode slave  db2(host='host200',port=7653,path = '/home/danghb/adb22/pgsql_data/dn02');
 4、	添加gtm信息
 add gtm master gtm(host='host200',port=7766, path='/home/danghb/adb22/pgsql_data/gtm');
 add gtm slave gtm(host='host201',port=7766, path='/home/danghb/adb22/pgsql_data/gtm');
+
+
+ssh danghb@host201 "echo host all all 0.0.0.0/0 trust >> /home/danghb/adb22/pgsql_data/dn01/pg_hba.conf "
 
 # alter
 alter datanode master db2(path = '/home/danghb/adb22/pgsql_data/dn02');
 
 # drop
 drop datanode master db2;
+
+# stop
+stop datanode master db2;
 
 --------- 2.2 install end------------------
 
@@ -239,14 +243,14 @@ select pg_database_size('bmsql');
 select pg_database.datname, 
 pg_database_size(pg_database.datname) AS size 
 from pg_database; 
-select pg_size_pretty(pg_database_size('dangtest')); 
+select pg_size_pretty(pg_database_size('hongpay')); 
 select pg_relation_size('test');  # table size
 select pg_size_pretty(pg_relation_size('test'));
 select pg_size_pretty(pg_total_relation_size('test')); 
 select spcname from pg_tablespace;  
 select pg_size_pretty(pg_tablespace_size('pg_default'));
 SELECT pg_size_pretty(SUM(pg_total_relation_size(quote_ident(schemaname) || '.' || quote_ident(tablename)))::BIGINT) 
-FROM pg_tables WHERE schemaname = 'bmsql2';
+FROM pg_tables WHERE schemaname = 'weian';
 SELECT schema_name, 
        pg_size_pretty(sum(table_size)),
        trunc((sum(table_size) / database_size) * 100,2)||'%'
