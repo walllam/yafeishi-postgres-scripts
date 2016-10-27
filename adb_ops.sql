@@ -64,6 +64,7 @@ export PATH=$PGHOME/bin:$PATH:$HOME/bin:/home/danghb/databus/gradle-3.0/bin
 ## adbmgr
 initmgr -D /home/danghb/adb22/adbmgr
 mgr_ctl start -D /home/danghb/adb22/adbmgr &
+mgr_ctl stop -D /home/danghb/adb22/adbmgr 
 adbmgrd -D /home/danghb/adb22/adbmgr &
 
 add host host201(port=22,protocol='ssh',pghome='/home/danghb/adb22/pgsql_xc',address="10.20.16.201",agentport=7632,user='danghb');
