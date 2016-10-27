@@ -400,9 +400,22 @@ explain (analyze,verbose,timing,buffers,costs) select * from test where id<1001;
 
 explain (verbose,costs false)  
 
-# pg_dump
+# pg_dump/pg_dumpall
 
 
+pg_dump -Fc hongpay --verbose -f hongpay.dump
+pg_dump -Fp hongpay --verbose -f hongpay.sql
+
+pg_dumpall -s -f hongpay_metadata.sql 
+
+
+#!/bin/bash
+
+date "+%Y-%m-%d %H:%M:%S" 
+
+
+
+# pg_restore
 
 # view object
 -- all objects
