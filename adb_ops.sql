@@ -29,6 +29,8 @@ danghb soft stack unlimited
 --------- 2.2 install start ------------------
 yum -y install libssh2-devel
 rm -rf * && ../adb_devel/configure --prefix=/home/danghb/adb22/pgsql_xc --with-blocksize=8  --with-wal-segsize=64 --with-wal-blocksize=64 --with-perl --with-python --with-openssl --with-pam  --with-ldap --with-libxml --with-libxslt --enable-thread-safety  --enable-debug  --enable-cassert CFLAGS='-DADB -O0 -ggdb3 -DGTM_DEBUG' && make install-world-contrib-recurse >/dev/null   
+rm -rf * && ../20161019/configure --prefix=/home/danghb/adb22/pgsql_xc --with-blocksize=8  --with-wal-segsize=64 --with-wal-blocksize=64 --with-perl --with-python --with-openssl --with-pam  --with-ldap --with-libxml --with-libxslt --enable-thread-safety  --enable-debug  --enable-cassert CFLAGS='-DADB -O0 -ggdb3 -DGTM_DEBUG' && make install-world-contrib-recurse >/dev/null   
+
 make -j4 all && make install
 cd contrib && make  && make install
 
@@ -75,12 +77,12 @@ start agent all
 
 # add
 1、	添加coordinator信息：
-add coordinator coord1(path = '/home/danghb/adb22/pgsql_data/cn01', host='host200', port=7642);
-add coordinator coord2(path = '/home/danghb/adb22/pgsql_data/cn01', host='host201', port=7642);
+add coordinator coord1(path = '/home/danghb/adb22/pgsql_data/coord', host='host200', port=7642);
+add coordinator coord2(path = '/home/danghb/adb22/pgsql_data/coord', host='host201', port=7642);
 
 2、	添加datanode master信息：
 add datanode master db1(path = '/home/danghb/adb22/pgsql_data/dn01', host='host200', port=7652);
-add datanode master db2(path = '/home/danghb/adb22/pgsql_data/dn01', host='host201', port=7652);
+add datanode master db2(path = '/home/danghb/adb22/pgsql_data/dn02', host='host201', port=7652);
 
 3、	添加datanode slave信息，添加slave的时候，由于slave与master同名，所以在master关键字后面写上刚才添加的master名字即可。
 add datanode slave  db2(host='host200',port=7653,path = '/home/danghb/adb22/pgsql_data/dn02');
@@ -95,7 +97,7 @@ ssh danghb@host201 "echo host all all 0.0.0.0/0 trust >> /home/danghb/adb22/pgsq
 alter datanode master db2(path = '/home/danghb/adb22/pgsql_data/dn02');
 
 # drop
-drop datanode master db2;
+drop datanode master db1;
 
 # stop
 stop datanode master db2;
