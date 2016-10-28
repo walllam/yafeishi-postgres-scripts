@@ -34,7 +34,7 @@ rm -rf * && ../20161019/configure --prefix=/home/danghb/adb22/pgsql_xc --with-bl
 make -j4 all && make install
 cd contrib && make  && make install
 
-
+yum -y install libssh2-devel
 rm -rf * && ../adb_devel/configure --prefix=/home/danghb/adb22/adbmgr --with-blocksize=8  --with-wal-segsize=64 --with-wal-blocksize=64 --with-perl --with-python --with-openssl --with-pam  --with-ldap --with-libxml --with-libxslt --enable-thread-safety  --enable-debug  --enable-cassert CFLAGS='-DADB -O0 -ggdb3 -DGTM_DEBUG' && make install-world-contrib-recurse >/dev/null   
 make -j4 all && make install
 cd contrib && make  && make install
@@ -63,7 +63,7 @@ export PGHOME=$ADB2_2_HOME
 export PATH=$PGHOME/bin:$PATH:$HOME/bin:/home/danghb/databus/gradle-3.0/bin
 
 
-## adbmgr
+############################ adbmgr
 initmgr -D /home/danghb/adb22/adbmgr
 mgr_ctl start -D /home/danghb/adb22/adbmgr &
 mgr_ctl stop -D /home/danghb/adb22/adbmgr 
@@ -101,6 +101,12 @@ drop datanode master db1;
 
 # stop
 stop datanode master db2;
+# set
+set datanode master all (log_destination='csvlog');
+set coordinator master all (log_destination='csvlog');
+
+############################ adbmgr
+
 
 --------- 2.2 install end------------------
 
