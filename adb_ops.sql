@@ -104,6 +104,9 @@ stop datanode master db2;
 # set
 set datanode master all (log_destination='csvlog');
 set coordinator master all (log_destination='csvlog');
+set coordinator master all(shared_preload_libraries = 'pg_stat_statements',pg_stat_statements.track = all,pg_stat_statements.save=true)
+set coordinator master all(pg_stat_statements.max = 100);
+set coordinator master all(max_connections = 200);
 
 ############################ adbmgr
 
@@ -121,6 +124,8 @@ username@dbname:port>
 %> port
 %/ current database name
 
+\set PROMPT1 'adbmgr> ' 
+\set PROMPT2 'adbmgr-contiune> ' 
 
 # connect
 psql -h localhost -p 15433 -d postgres -U postgres 
